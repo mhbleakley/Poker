@@ -6,7 +6,7 @@ class Card:
     def __init__(self, value, suit):
         self.value = value
         self.suit = suit
-        if self.suit == "Diamonds" or "Hearts":
+        if self.suit == "Diamonds" or "Hearts":  # color is implied by the suit of the card
             self.color = "Red"
         elif self.suit == "Clubs" or "Spades":
             self.color = "Black"
@@ -37,6 +37,7 @@ class Deck:
             random.shuffle(self.cards)
 
 
+# deck test
 # deck = Deck(start_empty=False, start_shuffled=False)
 # for card in deck.cards:
 #     print(str(card.value) + " of " + str(card.suit))
