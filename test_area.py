@@ -1,9 +1,18 @@
 
 
+count = 5
 players = ["Jim", "Peter", "Jack", "Sam"]
-rotation = [0, 1, 2, 0]
+rotation = []
 
-for i in range(len(players)):
-    if rotation[i] == 2:
-        for j in range(len(players)):
-            print(players[i % len(players)])
+place = count % len(players)
+
+# print(place)
+
+for i, player in enumerate(players[:place]):
+    rotation.append(len(players) - place + i)
+
+for i, player in enumerate(players[place:]):
+    rotation.append(i)
+
+for item in rotation:
+    print(item)

@@ -1,10 +1,11 @@
 from texas import *
 
-john = Player("John", 10000)
-sam = Player("Sam", 10000)
-aaron = Player("Aaron", 10000)
+john = Player("John", 100)
+sam = Player("Sam", 100)
+aaron = Player("Aaron", 100)
 
 players = [john, sam, aaron]
 
-texas = Texas(players)
+texas = Texas(players, 1)
+
 texas.play()

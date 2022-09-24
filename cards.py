@@ -6,12 +6,16 @@ class Card:
     def __init__(self, value, suit):
         self.value = value
         self.suit = suit
+        self.code = str(self.value[0]) + str(self.suit[0])
         if self.suit == "Diamonds" or "Hearts":  # color is implied by the suit of the card
             self.color = "Red"
         elif self.suit == "Clubs" or "Spades":
             self.color = "Black"
         else:
             print("Error: Invalid Suit")
+
+    def get_card_info(self):
+        return "{} of {}".format(self.value, self.suit)
 
 
 class Deck:
@@ -26,6 +30,7 @@ class Deck:
     def generate(self):
         values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
+        
 
         for suit in suits:
             for value in values:
