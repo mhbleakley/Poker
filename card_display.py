@@ -1,6 +1,8 @@
 from email.utils import encode_rfc2231
+from operator import add
 import os
 from cards import *
+import platform
 
 class CardPrinter:
 
@@ -8,14 +10,19 @@ class CardPrinter:
         if table:
             self.table = []
         self.hand = []
+        # if platform.system() == "Windows":
+        #     self.SDCH = ["S", "D", "C", "H"]
+        # else:
         self.SDCH = ["♠", "♦", "♣", "♥"] if solid else ["♤", "♢", "♧", "♡"]
 
+    # resolves suit of card for symbol (symbols found in SDCH)
     def get_symbol(self, card):
         suits = ["Spades", "Diamonds", "Clubs", "Hearts"]
         for i, suit in enumerate(suits):
             if card.suit == suit:
                 return self.SDCH[i]
 
+    # resolves value for code
     def get_value(self, card):
         values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         display_values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
@@ -30,27 +37,34 @@ class CardPrinter:
     def set_table(self, cards):
         self.table = cards
 
-    def display(self):
-        msg = ""
+    # displays cards/additional information to the terminal
+    # will display player options if any argument is given for it
+    # additional information will print to the right of the terminal
+    def display(self, player_options=None, additional_info=None):
+        term = os.get_terminal_size()
+
+        msg = "" # populate this to be printed to terminal screen
+
+        # making the pieces of cards
         card_edge = "+----+"
         card_row = "|    |"
-        card_value_long = "|{}  |"
+        card_value_long = "|{}  |" # one less space so that you can represnt longer values (i.e. 10) and not have spacing issues
         card_value = "|{}   |"
 
-        def print_cards(cards):
+        def print_cards(cards): # function to print cards specifically
             msg = ""
             for i in range(5):
                 row = ""
-                for card in cards:
-                    if i == 0 or i == 4:
+                for j, card in enumerate(cards):
+                    if i == 0 or i == 4: # print top/bottom of card
                         row += " " + card_edge
-                    if i == 1:
+                    if i == 1: # value
                         val = self.get_value(card)
                         if len(str(val)) > 1:
                             row += " " + card_value_long.format(val)
                         else:
                             row += " " + card_value.format(val)
-                    if i == 2:
+                    if i == 2: # suit
                         row += " " + card_value.format(self.get_symbol(card))
                     if i == 3:
                         row += " " + card_row
@@ -58,15 +72,40 @@ class CardPrinter:
             return msg
         
         if self.table:
+            msg += "Table:\n"
             msg += print_cards(self.table)
             msg += "\n\n"
+        
+        msg += "Your Hand:\n"
         msg += print_cards(self.hand)
+        
+        if player_options != None:
+            msg += "\n\nOptions:\n"
+            for i, option in enumerate(player_options):
+                msg += "{}. {}\n".format(i + 1, option)
 
-        lines = os.get_terminal_size()[1]
-        msg_lines = len(msg.split("\n"))
+        term_lines = term[1]
+        msg_lines = msg.split("\n")
+        msg_line_count = len(msg_lines)
+
+        if additional_info:
+            add_lines = additional_info.split("\n")
+            longest_msg_line = 0
+            for line in msg_lines:
+                if len(line) > longest_msg_line:
+                    longest_msg_line = len(line)
+            for i, line in enumerate(msg_lines):
+                if i < len(add_lines):
+                    line = line.ljust()
+                    # if len(line) < longest_msg_line:
+                    #     for j in range(longest_msg_line - len(line)):
+                    #         line += " "
+                        line += add_lines[i]
+
+
 
         disp = ""
-        for i in range(lines - msg_lines):
+        for i in range(term_lines - msg_line_count):
             disp += "\n"
         disp += msg        
 
@@ -79,11 +118,11 @@ deck.shuffle()
 
 my_cards = deck.cards[0:2]
 
-cp = CardPrinter(table=True, solid=False)
+cp = CardPrinter(table=True, solid=True)
 
 cp.set_hand(my_cards)
 cp.set_table(deck.cards[2:5])
 
+options = ["Check", "Raise", "Fold"]
 
-
-cp.display()
+cp.display(additional_info="Hello\nThere")
