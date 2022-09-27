@@ -1,32 +1,14 @@
-
+from treys import Card, Evaluator
 import random
-
-class Card:
-
-    def __init__(self, code):
-        self.code = code
-        self.suit = code[1]
-        rank = "23456789TJQKA"
-        for i, val in enumerate(rank):
-            if code[0] == val:
-                self.rank = i
-
-
-class Deck:
-
-    def __init__(self):
-        self.cards = []
-        rank = "23456789TJQKA"
-        suit = "DSHC"
-        for s in suit:
-            for r in rank:
-                self.cards.append(Card("{}{}".format(r, s)))
-        random.shuffle(self.cards)
-
-        
-deck = Deck()
-
-five = [deck.cards[:5]]
-
-def eval_five(hand):
     
+
+table = [Card.new('Ah'), Card.new('Kd'), Card.new('7d'), Card.new("Ac"), Card.new("6h")]
+
+jeff = [Card.new('Qs'), Card.new('Th')]
+
+sam = [Card.new('As'), Card.new('Th')]
+
+eval = Evaluator()
+
+print(eval.evaluate(table, jeff))
+print(eval.evaluate(table, sam))
