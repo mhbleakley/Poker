@@ -56,18 +56,18 @@ class CardPrinter:
             for i in range(5):
                 row = ""
                 for j, card in enumerate(cards):
+                    val = self.get_value(card)
+                    suit = self.get_symbol(card)
+                    if j > 0: # add a space between cards
+                        row += " "
                     if i == 0 or i == 4: # print top/bottom of card
-                        row += " " + card_edge
-                    if i == 1: # value
-                        val = self.get_value(card)
-                        if len(str(val)) > 1:
-                            row += " " + card_value_long.format(val)
-                        else:
-                            row += " " + card_value.format(val)
-                    if i == 2: # suit
-                        row += " " + card_value.format(self.get_symbol(card))
-                    if i == 3:
-                        row += " " + card_row
+                        row += card_edge
+                    if i == 1: # card value
+                        row += card_value_long.format(val) if len(str(val)) > 1 else card_value.format(val)
+                    if i == 2: # card suit
+                        row += card_value.format(suit)
+                    if i == 3: # generic row
+                        row += card_row
                 msg += row + "\n"
             return msg
         
@@ -86,28 +86,26 @@ class CardPrinter:
 
         term_lines = term[1]
         msg_lines = msg.split("\n")
-        msg_line_count = len(msg_lines)
 
-        if additional_info:
-            add_lines = additional_info.split("\n")
-            longest_msg_line = 0
-            for line in msg_lines:
-                if len(line) > longest_msg_line:
-                    longest_msg_line = len(line)
-            for i, line in enumerate(msg_lines):
-                if i < len(add_lines):
-                    line = line.ljust()
-                    # if len(line) < longest_msg_line:
-                    #     for j in range(longest_msg_line - len(line)):
-                    #         line += " "
-                        line += add_lines[i]
-
-
+        # ATTEMPT TO ADD INFROMATION TO SIDE OF SCREEN
+        # final_msg = ""
+        # if additional_info:
+        #     add_lines = additional_info.split("\n")
+        #     longest_msg_line = 0
+        #     for line in msg_lines:
+        #         if len(line) > longest_msg_line:
+        #             longest_msg_line = len(line)
+        #     for i, line in enumerate(msg_lines):
+        #         if i < len(add_lines):
+        #             final_msg += line.ljust(longest_msg_line - len(line)) + "\t|\t" + add_lines[i] + "\n"
+        #         else:
+        #             final_msg += line + "\n"
 
         disp = ""
-        for i in range(term_lines - msg_line_count):
+        for i in range(term_lines - len(msg_lines)):
             disp += "\n"
-        disp += msg        
+        disp += msg
+        # disp += final_msg        
 
         print(disp)
         
@@ -121,8 +119,8 @@ my_cards = deck.cards[0:2]
 cp = CardPrinter(table=True, solid=True)
 
 cp.set_hand(my_cards)
-cp.set_table(deck.cards[2:5])
+cp.set_table(deck.cards[2:7])
 
 options = ["Check", "Raise", "Fold"]
 
-cp.display(additional_info="Hello\nThere")
+cp.display(player_options=options)

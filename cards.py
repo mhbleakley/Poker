@@ -30,8 +30,6 @@ class Deck:
     def generate(self):
         values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
-        
-
         for suit in suits:
             for value in values:
                 card = Card(value, suit)
