@@ -1,18 +1,13 @@
+from player import Player
+from texas import Texas
 
+john = Player("John", 10)
+sam = Player("Sam", 10)
+aaron = Player("Aaron", 10)
+paul = Player("Paul", 10)
+gus = Player("Gus", 10)
 
-count = 5
-players = ["Jim", "Peter", "Jack", "Sam"]
-rotation = []
+players = [john, sam, aaron, paul, gus]
 
-place = count % len(players)
-
-# print(place)
-
-for i, player in enumerate(players[:place]):
-    rotation.append(len(players) - place + i)
-
-for i, player in enumerate(players[place:]):
-    rotation.append(i)
-
-for item in rotation:
-    print(item)
+texas = Texas(players, 1)
+texas.test()
