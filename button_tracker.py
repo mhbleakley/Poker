@@ -3,8 +3,9 @@ class ButtonTracker:
     def __init__(self, player_list):
         self.player_list = player_list
         self.button_position = 0
-        self.small_blind = self.player_list[self.button_position]
-        self.big_blind = self.player_list[self.button_position + 1]
+        self.dealer = self.player_list[self.button_position]
+        self.small_blind = self.player_list[self.button_position + 1]
+        self.big_blind = self.player_list[self.button_position + 2]
 
     def redefine_blinds(self, split=False):
         if split:

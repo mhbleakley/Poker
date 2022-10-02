@@ -90,17 +90,17 @@ class Texas:
                 a = input("Amount (min {}): ".format(self.minimum_bet))
                 if int(a) >= self.minimum_bet and int(a) <= player.money:
                     print("{} Bets ${}\n".format(player.name, int(a)))
-                    self.money_to_pot(player, int(a))
                     self.required_stake += int(a)
+                    self.money_to_pot(player, int(a))
                 else:
                     print("Invalid amount")
                     self.player_input(player, first, second, third)
             elif second == "Raise":
-                a = input("Amount (min {}): ".format(self.required_stake + self.minimum_bet))
+                a = input("Amount (min {}): ".format(self.required_stake + self.minimum_bet - player.current_stake))
                 if int(a) >= self.minimum_bet and int(a) <= player.money:
                     print("{} Raises ${}\n".format(player.name, int(a)))
+                    self.required_stake = int(a) + player.current_stake
                     self.money_to_pot(player, int(a))
-                    self.required_stake += int(a)
                 else:
                     print("Invalid amount")
                     self.player_input(player, first, second, third)
@@ -119,8 +119,8 @@ class Texas:
             self.player_input(first, second, third)
 
     def betting_round(self, first_time=True, preflop=False):
+        original_play_rotation = self.players
         if preflop:
-            original_play_rotation = self.players
             self.players = self.players[-2:] + self.players[:-2]
         for i, player in enumerate(self.players):
             if not first_time:
@@ -166,7 +166,8 @@ class Texas:
             
 
     def play(self):
-        print("Doing inital check")
+        rot = self.round_count % len(self.players)
+        self.players = self.players[-rot:] + self.players[:-rot]
         self.initial_check()
         if not self.valid_game:
             sys.exit("Not enough players or not all players have enough money.")
